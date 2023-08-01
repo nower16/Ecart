@@ -1,0 +1,120 @@
+{% load cart_tag %}
+
+<style media="screen">
+  .container .navbar-brand{
+    font-size: 2em;
+    transition: .4s;
+  }
+  .container .navbar-brand:hover{
+    color: #ff5e14;
+  }
+  .container .btn-search{
+    color: #ff5e14;
+    height: 38px;
+    width: 70px;
+    background:transparent;
+    border: 1px solid #ff5e14;
+    border-radius: 4px;
+    transition: .4s;
+  }
+  .container .btn-login{
+    font-size:1.1em;
+    height: 37px;
+    width: 70px;
+    border: 0px solid #ff5e14;
+    border-radius: 4px;
+    color: black;
+    background-color: #ff5e14;
+    transition: .3s
+  }
+  .container .btn-login:hover{
+    color: white;
+  }
+  .container .btn-search:hover{
+    color: #151414;
+    background-color: #ff5e14;
+    }
+    .container .dropdown-menu{
+      background-color: #151414;
+      border: none;
+    }
+    .container .dropdown-item{
+      color: #ff5e14;
+    }
+    .container #navbarNavDropdown, .container #navbarNav{
+      color: white;
+      transition: .4s;
+    }
+    .container #navbarNavDropdown:hover, .container #navbarNav:hover{
+      color: #ff5e14;
+    }
+    .cart_design{
+      color: white;
+      transition: .4s;
+    }
+    .cart_design:hover{
+      color: #ff5e14;
+    }
+
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: #202020;">
+  <div class="container">
+    <a href="{% url 'App_Shop:home' %}" class="navbar-brand">E-Cart Online Store</a>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav" aria-controls="#navbarNav" arial-expanded="false" arial-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+      <li class="nav-item dropdown">
+          <a class="nav-link dropdown" id="navbarNavDropdown" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><span style="color:#ff5e14"><i class="fa fa-list-alt" aria-hidden="true"></i></span> Catagories</a>
+          <div class="dropdown-menu" aria-labelledby="navbarNavDropdown" style="background-color:#202020;">
+            {% for category in categories %}
+            <a href="{% url 'App_Shop:home' %}?category={{ category.name }}" class="dropdown-item">{{category.name}}</a>
+            {% endfor %}
+            <div class="dropdown-divider"></div>
+            <a href="{% url 'App_Shop:home' %}" class="dropdown-item">All Products</a>
+          </div>
+      </li>
+      <li class="nav-item">
+        <a href="#footer" class="nav-link" id="navbarNav"><span style="color:#ff5e14">
+            <i class="fas fa-phone-alt"></i></span> Contact
+        </a>
+      </li>
+
+      </ul>
+    </div>
+
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        {% if request.user.is_authenticated %}
+        <li class="nav-item">
+          <a href="{% url 'App_Order:cart' %}" class="nav-link">
+              <i class="fa fa-shopping-cart" style="color:#ff5e14; padding-right:1px;"></i><span class="cart_design">Cart</span>
+              <span class="badge badge-pill badge-light">{{ request.user | cart_total }}</span>
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarNavDropdown" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"> <i class="fas fa-user-tie" style="color:#ff5e14;"></i> {{request.user.profile.username}} </a>
+
+            <div class="dropdown-menu" aria-labelledby="navbarNavDropdown" style="background-color:#202020;">
+              <a href="{% url 'App_Login:profile' %}" class="dropdown-item">Profile</a>
+              <a href="{% url 'App_Payment:orders' %}" class="dropdown-item">Orders</a>
+              <div class="dropdown-divider"></div>
+              <a href="{% url 'App_Login:logout' %}" class="dropdown-item">Logout</a>
+            </div>
+        </li>
+        {% else %}
+        <li class="nav-item"> <a href="{% url 'App_Login:login' %}"> <button class="btn-login" type="button" name="login">Login</button> </a></li>
+        {% endif %}
+      </ul>
+      <form action="{% url 'App_Shop:search_items' %}" method="POST" class="form-inline my-2 my-lg-0">
+      {% csrf_token %}
+      <input class="form-control mr-sm-2" type="search" placeholder="Search products" aria-label="Search" name="searched" style="margin-left:8px; width:200px; border:2px solid #ff5e14">
+      <button class="btn-search" type="submit">Search</button>
+    </form>
+
+
+    </div>
+  </div>
+</nav>
